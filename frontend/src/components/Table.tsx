@@ -28,10 +28,14 @@ export const Table = <RowType extends object> ({ rows, columns }: Props<RowType>
                             </tr>
                         </thead>
                         <tbody>
-                            {rows.map(row => (
-                                <tr className="border-b">
-                                    {columns.map(column => (
-                                        <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                            {/* TODO: Install `uuid` and use it instead of index */}
+                            {rows.map((row, index) => (
+                                <tr className="border-b" key={index}>
+                                    {columns.map((column, index) => (
+                                        <td
+                                            key={index}
+                                            className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                        >
                                             {row[column.rowKey]}
                                         </td>
                                     ))}

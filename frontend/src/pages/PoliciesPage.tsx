@@ -1,23 +1,25 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 import { Header } from '../components/Header'
 import { Navbar } from '../components/Navbar'
-import { Column, Table } from '../components/Table'
+import { Table } from '../components/Table'
+import { InsuranceType } from '../types/InsuranceType'
 import { Policy } from '../types/Policy'
-import { PolicyTableRow } from '../types/PolicyTableRow'
-import { buildTableRowsFromPolicies, fetchActivePolicies } from './utils'
-
-const policyColumns: Column<PolicyTableRow>[] = [
-    { title: 'Name', rowKey: 'fullName' },
-    { title: 'Provider', rowKey: 'provider' },
-    { title: 'Type', rowKey: 'insuranceType' },
-    { title: 'Status', rowKey: 'status' },
-]
+import { PolicyStatus } from '../types/PolicyStatus'
+import {
+    buildTableRowsFromPolicies,
+    fetchActivePolicies,
+    filterPolicies,
+    PolicyFilters,
+    policyColumns
+} from './utils'
 
 export const PoliciesPage = () => {
     const [policies, setPolicies] = useState<Policy[]>([])
     const [filteredPolicies, setFilteredPolicies] = useState<Policy[]>([])
-    const [searchText, setSearchText] = useState<string>()
+    const [nameFilter, setNameFilter] = useState<string>()
+    const [policyStatusFilter, setPolicyStatusFilter] = useState<PolicyStatus>()
+    const [insuranceTypeFilter, setInsuranceTypeFilter] = useState<InsuranceType>()
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
@@ -34,28 +36,53 @@ export const PoliciesPage = () => {
         setIsLoading(false)
     }
 
-    const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        const newSearchText = event.target.value.toLowerCase()
-        const matchedPolicies: Policy[] = []
+    const handleNameFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const updatedNameFilter = event.target.value.toLowerCase()
 
-        setSearchText(newSearchText)
-
-        if (newSearchText === '') {
-            setFilteredPolicies(policies)
-            return
+        const filters: PolicyFilters = {
+            name: updatedNameFilter,
+            insuranceType: insuranceTypeFilter,
+            policyStatus: policyStatusFilter,
         }
 
-        for (const policy of policies) {
-            const { customer: { firstName, lastName } } = policy
-            const lowercasedFullName = `${firstName} ${lastName}`.toLowerCase()
+        const updatedFilteredPolicies = filterPolicies(policies, filters)
 
-            if (lowercasedFullName.includes(newSearchText)) {
-                matchedPolicies.push(policy)
-            }
+        setNameFilter(updatedNameFilter)
+        setFilteredPolicies(updatedFilteredPolicies)
+    }
+
+    const handlePolicyStatusFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        const updatedPolicyStatusFilter = event.target.value as PolicyStatus
+
+        const filters: PolicyFilters = {
+            name: nameFilter,
+            insuranceType: insuranceTypeFilter,
+            policyStatus: updatedPolicyStatusFilter,
         }
 
-        setFilteredPolicies(matchedPolicies)
-    }, [policies])
+        const updatedFilteredPolicies = filterPolicies(policies, filters)
+
+        setPolicyStatusFilter(updatedPolicyStatusFilter)
+        setFilteredPolicies(updatedFilteredPolicies)
+    }
+
+    const handleInsuranceTypeFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        const updatedInsuranceTypeFilter = event.target.value as InsuranceType
+
+        const filters: PolicyFilters = {
+            name: nameFilter,
+            insuranceType: updatedInsuranceTypeFilter,
+            policyStatus: policyStatusFilter,
+        }
+
+        const updatedFilteredPolicies = filterPolicies(policies, filters)
+
+        setInsuranceTypeFilter(updatedInsuranceTypeFilter)
+        setFilteredPolicies(updatedFilteredPolicies)
+    }
+
+    // TODO: Implement
+    // const handleProviderFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {}    
 
     return (
         <div>
@@ -67,7 +94,18 @@ export const PoliciesPage = () => {
                         ? <div>Loading Policies</div>
                         : (
                             <div>
-                                <input type="text" value={searchText} onChange={handleSearchChange} />
+                                <div>
+                                    <input type="text" value={nameFilter} onChange={handleNameFilterChange} />
+                                    <select value={policyStatusFilter} onChange={handlePolicyStatusFilterChange}>
+                                        <option value={PolicyStatus.Active}>{PolicyStatus.Active}</option>
+                                        <option value={PolicyStatus.Pending}>{PolicyStatus.Pending}</option>
+                                    </select>
+                                    <select value={insuranceTypeFilter} onChange={handleInsuranceTypeFilterChange}>
+                                        <option value={InsuranceType.Health}>{InsuranceType.Health}</option>
+                                        <option value={InsuranceType.Household}>{InsuranceType.Household}</option>
+                                        <option value={InsuranceType.Liability}>{InsuranceType.Liability}</option>
+                                    </select>
+                                </div>
                                 <Table
                                     columns={policyColumns}
                                     rows={buildTableRowsFromPolicies(filteredPolicies)}
