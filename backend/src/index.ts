@@ -7,6 +7,12 @@ const prisma = new PrismaClient();
 
 app.use(express.json())
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Headers', ['Content-Type'])
+  next();
+});
+
 app.get('/policies', async (req, res) => {
   const { search } = req.query;
 
