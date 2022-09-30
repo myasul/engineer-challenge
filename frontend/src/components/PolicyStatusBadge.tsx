@@ -9,7 +9,7 @@ type BadgeColor = {
     backgroundColor: string
 }
 
-const BadgeColorMap = {
+const BadgeColorMap: { [key in PolicyStatus]: BadgeColor } = {
     [PolicyStatus.Active]: { textColor: 'tc-green-100', backgroundColor: 'bg-green-100' },
     [PolicyStatus.Pending]: { textColor: 'tc-yellow-600', backgroundColor: 'bg-yellow-100' },
     [PolicyStatus.Cancelled]: { textColor: 'tc-red-100', backgroundColor: 'bg-red-100' },

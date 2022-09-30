@@ -1,20 +1,11 @@
+import { ChangeEvent, useCallback, useEffect, useState } from 'react'
+
 import { Header } from '../components/Header'
 import { Navbar } from '../components/Navbar'
 import { Column, Table } from '../components/Table'
-import { PolicyStatusBadge } from "../components/PolicyStatusBadge"
-import React, { useEffect, useState } from 'react'
 import { Policy } from '../types/Policy'
-import { InsuranceType } from '../types/InsuranceType'
-import { PolicyStatus } from '../types/PolicyStatus'
-
-const POLICY_API_PATH = 'http://localhost:4000/policies'
-
-type PolicyTableRow = {
-    fullName: string
-    provider: string
-    insuranceType: InsuranceType
-    status: React.ReactNode
-}
+import { PolicyTableRow } from '../types/PolicyTableRow'
+import { buildTableRowsFromPolicies, fetchActivePolicies } from './utils'
 
 const policyColumns: Column<PolicyTableRow>[] = [
     { title: 'Name', rowKey: 'fullName' },
@@ -25,41 +16,46 @@ const policyColumns: Column<PolicyTableRow>[] = [
 
 export const PoliciesPage = () => {
     const [policies, setPolicies] = useState<Policy[]>([])
+    const [filteredPolicies, setFilteredPolicies] = useState<Policy[]>([])
+    const [searchText, setSearchText] = useState<string>()
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        fetchActivePolicies()
+        handlePolicyFetch()
     }, [])
 
-    // TODO: Think of a more appropriate name
-    const fetchActivePolicies = async () => {
+    const handlePolicyFetch = async () => {
         setIsLoading(true)
 
-        const validStatuses = [PolicyStatus.Active, PolicyStatus.Pending]
-        const url = new URL(POLICY_API_PATH)
-        url.searchParams.append('status', validStatuses.join(','))
-
-        const result = await fetch(url.toString())
-        const fetchedPolicies = await result.json()
+        const fetchedPolicies = await fetchActivePolicies()
 
         setPolicies(fetchedPolicies)
+        setFilteredPolicies(fetchedPolicies)
         setIsLoading(false)
     }
 
-    const buildTableRowsFromPolicies = (policies: Policy[]) => {
-        const rows: PolicyTableRow[] = []
+    const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+        const newSearchText = event.target.value.toLowerCase()
+        const matchedPolicies: Policy[] = []
 
-        for (const policy of policies) {
-            rows.push({
-                fullName: `${policy.customer.firstName} ${policy.customer.firstName}`,
-                provider: policy.provider,
-                insuranceType: policy.insuranceType,
-                status: <PolicyStatusBadge status={policy.status} />,
-            })
+        setSearchText(newSearchText)
+
+        if (newSearchText === '') {
+            setFilteredPolicies(policies)
+            return
         }
 
-        return rows
-    }
+        for (const policy of policies) {
+            const { customer: { firstName, lastName } } = policy
+            const lowercasedFullName = `${firstName} ${lastName}`.toLowerCase()
+
+            if (lowercasedFullName.includes(newSearchText)) {
+                matchedPolicies.push(policy)
+            }
+        }
+
+        setFilteredPolicies(matchedPolicies)
+    }, [policies])
 
     return (
         <div>
@@ -70,10 +66,13 @@ export const PoliciesPage = () => {
                     isLoading
                         ? <div>Loading Policies</div>
                         : (
-                            <Table
-                                columns={policyColumns}
-                                rows={buildTableRowsFromPolicies(policies)}
-                            />
+                            <div>
+                                <input type="text" value={searchText} onChange={handleSearchChange} />
+                                <Table
+                                    columns={policyColumns}
+                                    rows={buildTableRowsFromPolicies(filteredPolicies)}
+                                />
+                            </div>
                         )
                 }
             </div>
