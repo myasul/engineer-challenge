@@ -5,6 +5,7 @@ import { PolicyStatusBadge } from "../components/PolicyStatusBadge"
 import React, { useEffect, useState } from 'react'
 import { Policy } from '../types/Policy'
 import { InsuranceType } from '../types/InsuranceType'
+import { PolicyStatus } from '../types/PolicyStatus'
 
 const POLICY_API_PATH = 'http://localhost:4000/policies'
 
@@ -34,8 +35,11 @@ export const PoliciesPage = () => {
     const fetchActivePolicies = async () => {
         setIsLoading(true)
 
-        // TODO: Add error handling
-        const result = await fetch(POLICY_API_PATH)
+        const validStatuses = [PolicyStatus.Active, PolicyStatus.Pending]
+        const url = new URL(POLICY_API_PATH)
+        url.searchParams.append('status', validStatuses.join(','))
+
+        const result = await fetch(url.toString())
         const fetchedPolicies = await result.json()
 
         setPolicies(fetchedPolicies)
