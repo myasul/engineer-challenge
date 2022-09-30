@@ -27,10 +27,11 @@ export const PoliciesPage = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        fetchPolicies()
+        fetchActivePolicies()
     }, [])
 
-    const fetchPolicies = async () => {
+    // TODO: Think of a more appropriate name
+    const fetchActivePolicies = async () => {
         setIsLoading(true)
 
         // TODO: Add error handling
