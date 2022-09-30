@@ -95,7 +95,18 @@ export const PoliciesPage = () => {
                         : (
                             <div>
                                 <div>
+                                    {/* TODO: 
+                                        - Pull out to a separate component
+                                        - Add label/placeholder
+                                        - Add magnifying glass icon
+                                    */}
                                     <input type="text" value={nameFilter} onChange={handleNameFilterChange} />
+                                    {/* TODO: 
+                                        - Pull out to a separate component
+                                        - Add label/placeholder
+                                        - Add x icon to remove selected option
+                                        - Add magnifying glass icon
+                                     */}
                                     <select value={policyStatusFilter} onChange={handlePolicyStatusFilterChange}>
                                         <option value={PolicyStatus.Active}>{PolicyStatus.Active}</option>
                                         <option value={PolicyStatus.Pending}>{PolicyStatus.Pending}</option>
