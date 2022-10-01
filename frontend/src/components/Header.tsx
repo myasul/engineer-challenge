@@ -1,5 +1,5 @@
 export const Header = ({ headerText }: { headerText: string }) => (
-    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+    <h1 className="text-3xl text-white mb-8">
         {headerText}
     </h1>
 )

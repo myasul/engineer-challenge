@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 
 import { Header } from '../components/Header'
 import { Navbar } from '../components/Navbar'
+import { SearchInput } from '../components/SearchInput'
 import { Table } from '../components/Table'
 import { InsuranceType } from '../types/InsuranceType'
 import { Policy } from '../types/Policy'
@@ -20,6 +21,7 @@ export const PoliciesPage = () => {
     const [nameFilter, setNameFilter] = useState<string>()
     const [policyStatusFilter, setPolicyStatusFilter] = useState<PolicyStatus>()
     const [insuranceTypeFilter, setInsuranceTypeFilter] = useState<InsuranceType>()
+    // Add a smoother loading experience
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
@@ -36,18 +38,18 @@ export const PoliciesPage = () => {
         setIsLoading(false)
     }
 
-    const handleNameFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const updatedNameFilter = event.target.value.toLowerCase()
+    const handleNameFilterChange = (updatedNameFilter: string) => {
+        const lowercasedNameFilter = updatedNameFilter.toLowerCase()
 
         const filters: PolicyFilters = {
-            name: updatedNameFilter,
+            name: lowercasedNameFilter,
             insuranceType: insuranceTypeFilter,
             policyStatus: policyStatusFilter,
         }
 
         const updatedFilteredPolicies = filterPolicies(policies, filters)
 
-        setNameFilter(updatedNameFilter)
+        setNameFilter(lowercasedNameFilter)
         setFilteredPolicies(updatedFilteredPolicies)
     }
 
@@ -85,45 +87,50 @@ export const PoliciesPage = () => {
     // const handleProviderFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {}    
 
     return (
-        <div>
-            <Navbar />
-            <div className="w-full p-8">
-                <Header headerText='Policies' />
-                {
-                    isLoading
-                        ? <div>Loading Policies</div>
-                        : (
-                            <div>
-                                <div>
-                                    {/* TODO: 
+        <div className='font-serif'>
+            <div className="w-full">
+                <Navbar />
+                <div className='bg-feather px-16 py-6'>
+                    <Header headerText='Policies' />
+                    <div className='flex gap-4'>
+                        {/* TODO: 
                                         - Pull out to a separate component
                                         - Add label/placeholder
                                         - Add magnifying glass icon
                                     */}
-                                    <input type="text" value={nameFilter} onChange={handleNameFilterChange} />
-                                    {/* TODO: 
+                        <SearchInput
+                            value={nameFilter}
+                            onChange={handleNameFilterChange}
+                        />
+                        {/* TODO: 
                                         - Pull out to a separate component
                                         - Add label/placeholder
                                         - Add x icon to remove selected option
                                         - Add magnifying glass icon
                                      */}
-                                    <select value={policyStatusFilter} onChange={handlePolicyStatusFilterChange}>
-                                        <option value={PolicyStatus.Active}>{PolicyStatus.Active}</option>
-                                        <option value={PolicyStatus.Pending}>{PolicyStatus.Pending}</option>
-                                    </select>
-                                    <select value={insuranceTypeFilter} onChange={handleInsuranceTypeFilterChange}>
-                                        <option value={InsuranceType.Health}>{InsuranceType.Health}</option>
-                                        <option value={InsuranceType.Household}>{InsuranceType.Household}</option>
-                                        <option value={InsuranceType.Liability}>{InsuranceType.Liability}</option>
-                                    </select>
-                                </div>
+                        <select value={policyStatusFilter} onChange={handlePolicyStatusFilterChange}>
+                            <option value={PolicyStatus.Active}>{PolicyStatus.Active}</option>
+                            <option value={PolicyStatus.Pending}>{PolicyStatus.Pending}</option>
+                        </select>
+                        <select value={insuranceTypeFilter} onChange={handleInsuranceTypeFilterChange}>
+                            <option value={InsuranceType.Health}>{InsuranceType.Health}</option>
+                            <option value={InsuranceType.Household}>{InsuranceType.Household}</option>
+                            <option value={InsuranceType.Liability}>{InsuranceType.Liability}</option>
+                        </select>
+                    </div>
+                </div>
+                <div className='px-16 py-8'>
+                    {
+                        isLoading
+                            ? <div>Loading Policies</div>
+                            : (
                                 <Table
                                     columns={policyColumns}
                                     rows={buildTableRowsFromPolicies(filteredPolicies)}
                                 />
-                            </div>
-                        )
-                }
+                            )
+                    }
+                </div>
             </div>
         </div>
     )
