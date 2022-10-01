@@ -1,7 +1,7 @@
 export const MagnifyingGlass = ({ size = 30 }: { size?: number }) => (
     <div>
         <svg
-            fill="#FFFFFF"
+            className='fill-current'
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 30 30"
             width={`${size}px`}

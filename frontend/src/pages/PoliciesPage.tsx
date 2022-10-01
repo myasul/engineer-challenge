@@ -93,21 +93,17 @@ export const PoliciesPage = () => {
                 <div className='bg-feather px-16 py-6'>
                     <Header headerText='Policies' />
                     <div className='flex gap-4'>
-                        {/* TODO: 
-                                        - Pull out to a separate component
-                                        - Add label/placeholder
-                                        - Add magnifying glass icon
-                                    */}
                         <SearchInput
                             value={nameFilter}
                             onChange={handleNameFilterChange}
+                            placeholder="Search policies using client's name"
                         />
                         {/* TODO: 
-                                        - Pull out to a separate component
-                                        - Add label/placeholder
-                                        - Add x icon to remove selected option
-                                        - Add magnifying glass icon
-                                     */}
+                            - Pull out to a separate component
+                            - Add label/placeholder
+                            - Add x icon to remove selected option
+                            - Add magnifying glass icon
+                         */}
                         <select value={policyStatusFilter} onChange={handlePolicyStatusFilterChange}>
                             <option value={PolicyStatus.Active}>{PolicyStatus.Active}</option>
                             <option value={PolicyStatus.Pending}>{PolicyStatus.Pending}</option>
