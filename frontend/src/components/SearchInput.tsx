@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
+import { MagnifyingGlass } from './icons/MagnifyingGlass'
 
-import { MagnifyingGlass } from './MagnifyingGlass'
 
 type Props<InputValue> = {
     value?: InputValue
@@ -17,21 +17,24 @@ export const SearchInput = <InputValue extends string> (
     }
 
     return (
+        // TODO:
+        // 1. Add thin feather violet border when hovered.
+        // 2. Make the border thicker when focused.
         <div
             className='
-                bg-translucent flex p-4 w-4/12 rounded-md text-white
+                bg-translucent flex py-2 px-3 w-4/12 rounded-md text-white h-12
                 focus-within:bg-white transition ease-in delay-150
-                focus-within:text-black
+                focus-within:text-black cursor-pointer
             '
         >
-            <button className="cursor-pointer bg-transparent">
+            <button className="bg-transparent">
                 <MagnifyingGlass />
             </button>
             <input
                 type="text"
                 value={value}
                 onChange={handleNameFilterChange}
-                className="ml-1 w-full h-[1.5rem] border-none focus:outline-none focus:ring-0 bg-transparent placeholder-white focus:placeholder-gray-400"
+                className="ml-1 w-full border-none focus:outline-none focus:ring-0 bg-transparent placeholder-white focus:placeholder-gray-400"
                 placeholder={placeholder}
             />
         </div>

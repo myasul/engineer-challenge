@@ -1,11 +1,17 @@
 // tailwind.config.js
 module.exports = {
+//   mode: 'jit',
+//   purge: [
+//     './public/**/*.html',
+//     './src/**/*.{js,jsx,ts,tsx,vue}',
+//   ],
   purge: [],
-  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
         colors: {
-            'feather': '#8E8CED',
+            'feather-primary': '#8E8CED',
+            'feather-border': '#8E8CEE',
+            'feather-hover': 'rgb(164, 162, 241, 0.5)',
             'translucent': 'rgba(255, 255, 255, 0.2)'
         }
     },

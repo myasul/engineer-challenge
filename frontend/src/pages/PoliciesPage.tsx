@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react'
+import { Dropdown } from '../components/Dropdown'
 
-import { Header } from '../components/Header'
 import { Navbar } from '../components/Navbar'
 import { SearchInput } from '../components/SearchInput'
 import { Table } from '../components/Table'
@@ -53,33 +53,31 @@ export const PoliciesPage = () => {
         setFilteredPolicies(updatedFilteredPolicies)
     }
 
-    const handlePolicyStatusFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        const updatedPolicyStatusFilter = event.target.value as PolicyStatus
-
+    // TODO: Fix parameter typing
+    const handlePolicyStatusFilterChange = (selecetedPolicyStatus: any) => {
         const filters: PolicyFilters = {
             name: nameFilter,
             insuranceType: insuranceTypeFilter,
-            policyStatus: updatedPolicyStatusFilter,
+            policyStatus: selecetedPolicyStatus,
         }
 
         const updatedFilteredPolicies = filterPolicies(policies, filters)
 
-        setPolicyStatusFilter(updatedPolicyStatusFilter)
+        setPolicyStatusFilter(selecetedPolicyStatus)
         setFilteredPolicies(updatedFilteredPolicies)
     }
 
-    const handleInsuranceTypeFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        const updatedInsuranceTypeFilter = event.target.value as InsuranceType
-
+    // TODO: Fix parameter typing
+    const handleInsuranceTypeFilterChange = (selectedInsuranceType: any) => {
         const filters: PolicyFilters = {
             name: nameFilter,
-            insuranceType: updatedInsuranceTypeFilter,
+            insuranceType: selectedInsuranceType,
             policyStatus: policyStatusFilter,
         }
 
         const updatedFilteredPolicies = filterPolicies(policies, filters)
 
-        setInsuranceTypeFilter(updatedInsuranceTypeFilter)
+        setInsuranceTypeFilter(selectedInsuranceType)
         setFilteredPolicies(updatedFilteredPolicies)
     }
 
@@ -89,30 +87,43 @@ export const PoliciesPage = () => {
     return (
         <div className='font-serif'>
             <div className="w-full">
-                <Navbar />
-                <div className='bg-feather px-16 py-6'>
-                    <Header headerText='Policies' />
-                    <div className='flex gap-4'>
-                        <SearchInput
-                            value={nameFilter}
-                            onChange={handleNameFilterChange}
-                            placeholder="Search policies using client's name"
-                        />
-                        {/* TODO: 
-                            - Pull out to a separate component
-                            - Add label/placeholder
-                            - Add x icon to remove selected option
-                            - Add magnifying glass icon
-                         */}
-                        <select value={policyStatusFilter} onChange={handlePolicyStatusFilterChange}>
-                            <option value={PolicyStatus.Active}>{PolicyStatus.Active}</option>
-                            <option value={PolicyStatus.Pending}>{PolicyStatus.Pending}</option>
-                        </select>
-                        <select value={insuranceTypeFilter} onChange={handleInsuranceTypeFilterChange}>
-                            <option value={InsuranceType.Health}>{InsuranceType.Health}</option>
-                            <option value={InsuranceType.Household}>{InsuranceType.Household}</option>
-                            <option value={InsuranceType.Liability}>{InsuranceType.Liability}</option>
-                        </select>
+                <div className="w-full shadow-md">
+                    <Navbar />
+                    <div className='bg-feather-primary px-16 py-6'>
+                        <h1 className="text-3xl text-white mb-8">
+                            Policies
+                        </h1>
+                        <div className='flex gap-4'>
+                            <SearchInput
+                                value={nameFilter}
+                                onChange={handleNameFilterChange}
+                                placeholder="Search policies using client's name"
+                            />
+                            {
+                                /* TODO: 
+                                    x Pull out to a separate component
+                                    - Add label/placeholder
+                                    - Add x icon to remove selected option
+                                 */
+                            }
+                            <Dropdown
+                                options={[
+                                    { key: PolicyStatus.Active, value: PolicyStatus.Active },
+                                    { key: PolicyStatus.Pending, value: PolicyStatus.Pending }
+                                ]}
+                                onSelectedOptionChange={handlePolicyStatusFilterChange}
+                                selectedOption={{ key: policyStatusFilter, value: policyStatusFilter }}
+                            />
+                            <Dropdown
+                                options={[
+                                    { key: InsuranceType.Health, value: InsuranceType.Health },
+                                    { key: InsuranceType.Household, value: InsuranceType.Household },
+                                    { key: InsuranceType.Liability, value: InsuranceType.Liability }
+                                ]}
+                                onSelectedOptionChange={handleInsuranceTypeFilterChange}
+                                selectedOption={{ key: insuranceTypeFilter, value: insuranceTypeFilter }}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className='px-16 py-8'>

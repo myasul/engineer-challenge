@@ -1,7 +1,7 @@
 import logo from '../assets/logo.svg'
 
 export const Navbar = () => (
-    <div className="relative bg-feather">
+    <div className="relative bg-feather-primary">
         <div className="w-full px-4 sm:px-16">
             <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
                 <div className="flex justify-start lg:w-0 lg:flex-1">
