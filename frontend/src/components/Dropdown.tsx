@@ -61,7 +61,7 @@ export const Dropdown = ({
                 py-2 px-3 w-2/12 rounded-md h-12
                 cursor-pointer relative text-white bg-translucent
                 focus-within:bg-white transition ease-in delay-75
-                focus-within:text-black 
+                focus-within:text-feather-dark 
             '
             ref={dropdownContainerRef}
         >
@@ -71,11 +71,14 @@ export const Dropdown = ({
                 ref={buttonRef}
             >
                 <div className='flex-grow text-left'>
-                    {selectedOption.value ?? placeholder}
+                    {selectedOption.value
+                        ? <span className="text-feather-dark">{selectedOption.value}</span>
+                        : <span className="">{placeholder}</span>
+                    }
                 </div>
                 {
                     selectedOption.value
-                        ? <Clear size={24} onClick={handleSelectedOptionRemove} />
+                        ? <Clear className='text-feather-dark' size={24} onClick={handleSelectedOptionRemove} />
                         : <ChevronDown size={24} />
                 }
             </button>

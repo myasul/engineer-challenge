@@ -101,13 +101,6 @@ export const PoliciesPage = () => {
                                 onChange={handleNameFilterChange}
                                 placeholder="Search policies using client's name"
                             />
-                            {
-                                /* TODO: 
-                                    x Pull out to a separate component
-                                    - Add label/placeholder
-                                    - Add x icon to remove selected option
-                                 */
-                            }
                             <Dropdown
                                 placeholder='Policy status'
                                 options={[

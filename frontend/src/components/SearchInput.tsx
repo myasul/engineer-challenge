@@ -24,7 +24,7 @@ export const SearchInput = <InputValue extends string> (
             className='
                 bg-translucent flex py-2 px-3 w-4/12 rounded-md text-white h-12
                 focus-within:bg-white transition ease-in delay-150
-                focus-within:text-black cursor-pointer
+                focus-within:text-feather-dark cursor-pointer
             '
         >
             <button className="bg-transparent">

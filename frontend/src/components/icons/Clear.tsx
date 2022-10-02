@@ -1,5 +1,11 @@
-export const Clear = ({ size = 30, onClick }: { size?: number, onClick: () => void }) => (
-    <div onClick={onClick}>
+type Props = {
+    size?: number
+    className?: string
+    onClick: () => void
+}
+
+export const Clear = ({ size = 30, className, onClick }: Props) => (
+    <div onClick={onClick} className={className}>
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
