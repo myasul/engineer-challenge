@@ -15,6 +15,8 @@ import {
     policyColumns
 } from './utils'
 
+// TODO:
+// - Make the data that are all caps displayed as title case
 export const PoliciesPage = () => {
     const [policies, setPolicies] = useState<Policy[]>([])
     const [filteredPolicies, setFilteredPolicies] = useState<Policy[]>([])
@@ -107,21 +109,25 @@ export const PoliciesPage = () => {
                                  */
                             }
                             <Dropdown
+                                placeholder='Policy status'
                                 options={[
                                     { key: PolicyStatus.Active, value: PolicyStatus.Active },
                                     { key: PolicyStatus.Pending, value: PolicyStatus.Pending }
                                 ]}
                                 onSelectedOptionChange={handlePolicyStatusFilterChange}
                                 selectedOption={{ key: policyStatusFilter, value: policyStatusFilter }}
+                                onSelectedOptionRemove={() => handlePolicyStatusFilterChange(undefined)}
                             />
                             <Dropdown
+                                placeholder='Insurance type'
                                 options={[
                                     { key: InsuranceType.Health, value: InsuranceType.Health },
                                     { key: InsuranceType.Household, value: InsuranceType.Household },
                                     { key: InsuranceType.Liability, value: InsuranceType.Liability }
                                 ]}
-                                onSelectedOptionChange={handleInsuranceTypeFilterChange}
                                 selectedOption={{ key: insuranceTypeFilter, value: insuranceTypeFilter }}
+                                onSelectedOptionChange={handleInsuranceTypeFilterChange}
+                                onSelectedOptionRemove={() => handleInsuranceTypeFilterChange(undefined)}
                             />
                         </div>
                     </div>

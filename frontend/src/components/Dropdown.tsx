@@ -1,25 +1,33 @@
-import { MouseEvent, FocusEvent, useState, useRef, useEffect } from "react"
+import { MouseEvent, useState, useRef, useEffect } from "react"
 import { ChevronDown } from './icons/ChevronDown'
+import { Clear } from './icons/Clear'
 
 type Props = {
+    placeholder: string
     options: { key: any, value: any }[]
     selectedOption: { key: any, value: any }
     onSelectedOptionChange: (selectedOption: any) => void
+    onSelectedOptionRemove: () => void
 }
 
-export const Dropdown = ({ options, selectedOption, onSelectedOptionChange }: Props) => {
+export const Dropdown = ({
+    placeholder,
+    options,
+    selectedOption,
+    onSelectedOptionChange,
+    onSelectedOptionRemove
+}: Props) => {
     const [showOptions, setShowOptions] = useState(false)
-    const ref = useRef<HTMLDivElement>(null)
-
-    const handleDropdownClick = () => {
-        setShowOptions(showOptions => !showOptions)
-    }
+    const dropdownContainerRef = useRef<HTMLDivElement>(null)
+    const buttonRef = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
         const handleClickOutside = (event: globalThis.MouseEvent) => {
-            console.log(event)
-            // @ts-ignore
-            if (ref.current && !ref.current.contains(event.target)) {
+            if (
+                dropdownContainerRef.current &&
+                // @ts-ignore
+                !dropdownContainerRef.current.contains(event.target)
+            ) {
                 setShowOptions(false)
             }
         }
@@ -27,7 +35,7 @@ export const Dropdown = ({ options, selectedOption, onSelectedOptionChange }: Pr
         window.addEventListener('click', handleClickOutside)
 
         return () => window.removeEventListener('click', handleClickOutside)
-    }, [])
+    }, [dropdownContainerRef])
 
     const handleSelectedOptionChange = (event: MouseEvent<HTMLLIElement>) => {
         const optionValue = event.currentTarget.innerText
@@ -35,6 +43,15 @@ export const Dropdown = ({ options, selectedOption, onSelectedOptionChange }: Pr
 
         onSelectedOptionChange(selectedOption ? selectedOption.value : '')
         setShowOptions(false)
+    }
+
+    const handleSelectedOptionRemove = () => {
+        buttonRef?.current?.blur()
+        onSelectedOptionRemove()
+    }
+
+    const handleDropdownClick = () => {
+        setShowOptions(showOptions => !showOptions)
     }
 
     return (
@@ -46,14 +63,21 @@ export const Dropdown = ({ options, selectedOption, onSelectedOptionChange }: Pr
                 focus-within:bg-white transition ease-in delay-75
                 focus-within:text-black 
             '
-            ref={ref}
+            ref={dropdownContainerRef}
         >
             <button
                 onClick={handleDropdownClick}
                 className="flex items-center justify-between w-full h-full"
+                ref={buttonRef}
             >
-                {selectedOption.value}
-                <ChevronDown size={24} />
+                <div className='flex-grow text-left'>
+                    {selectedOption.value ?? placeholder}
+                </div>
+                {
+                    selectedOption.value
+                        ? <Clear size={24} onClick={handleSelectedOptionRemove} />
+                        : <ChevronDown size={24} />
+                }
             </button>
             {showOptions ? (
                 <ul
