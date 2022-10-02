@@ -1,17 +1,9 @@
-import { PolicyStatusBadge } from '../components/PolicyStatusBadge'
-import { Column } from '../components/Table'
-import { InsuranceType } from '../types/InsuranceType'
-import { Policy } from '../types/Policy'
-import { PolicyStatus } from '../types/PolicyStatus'
-import { PolicyTableRow } from '../types/PolicyTableRow'
-
-export type PolicyFilters = {
-    name?: string,
-    insuranceType?: InsuranceType,
-    policyStatus?: PolicyStatus,
-    // TODO: Implement
-    // provider: string
-}
+import { PolicyStatusBadge } from '../../components/PolicyStatusBadge'
+import { Column } from '../../components/Table'
+import { Policy } from '../../types/Policy'
+import { PolicyFilters } from '../../types/PolicyFilters'
+import { PolicyStatus } from '../../types/PolicyStatus'
+import { PolicyTableRow } from '../../types/PolicyTableRow'
 
 const POLICY_API_PATH = 'http://localhost:4000/policies'
 
@@ -22,8 +14,7 @@ export const policyColumns: Column<PolicyTableRow>[] = [
     { title: 'Status', rowKey: 'status' },
 ]
 
-// TODO: Think of a more appropriate name
-export const fetchActivePolicies = async (): Promise<Policy[]> => {
+export const fetchOngoingPolicies = async (): Promise<Policy[]> => {
     const validStatuses = [PolicyStatus.Active, PolicyStatus.Pending]
     const url = new URL(POLICY_API_PATH)
     url.searchParams.append('status', validStatuses.join(','))
@@ -40,8 +31,8 @@ export const buildTableRowsFromPolicies = (policies: Policy[]) => {
     for (const policy of policies) {
         rows.push({
             fullName: `${policy.customer.firstName} ${policy.customer.lastName}`,
-            provider: policy.provider,
-            insuranceType: policy.insuranceType,
+            provider: toTitleCase(policy.provider),
+            insuranceType: toTitleCase(policy.insuranceType),
             status: <PolicyStatusBadge status={policy.status} />,
         })
     }
@@ -69,4 +60,12 @@ export const filterPolicies = (policies: Policy[], filters: PolicyFilters) => {
     }
 
     return matchedPolicies
+}
+
+export const toTitleCase = (text: string) => {
+    if (text.length <= 1) return text.toUpperCase()
+
+    const [firstLetter, ...remainingLetters] = text.toLowerCase()
+
+    return firstLetter.toUpperCase() + remainingLetters.join('')
 }

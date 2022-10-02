@@ -1,5 +1,5 @@
 export const ChevronDown = ({ size = 30 }: { size?: number }) => (
-    <div>
+    <div aria-label='chevron down icon'>
         <svg
             className='stroke-current'
             width={`${size}px`}

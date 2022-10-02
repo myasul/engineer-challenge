@@ -1,5 +1,5 @@
 import "./index.css"
-import { PoliciesPage } from './pages/PoliciesPage'
+import { PoliciesPage } from './pages/policies/PoliciesPage'
 
 const App = () => (
     <div>

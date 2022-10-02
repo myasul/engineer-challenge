@@ -4,8 +4,8 @@ type Props = {
     onClick: () => void
 }
 
-export const Clear = ({ size = 30, className, onClick }: Props) => (
-    <div onClick={onClick} className={className}>
+export const Remove = ({ size = 30, className, onClick }: Props) => (
+    <div aria-label='Remove Icon' onClick={onClick} className={className}>
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

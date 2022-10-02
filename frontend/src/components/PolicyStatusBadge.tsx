@@ -17,15 +17,16 @@ const BadgeColorMap: { [key in PolicyStatus]: BadgeColor } = {
 }
 
 const BadgeTextMap = {
-    [PolicyStatus.Active]: 'ACTIVE',
-    [PolicyStatus.Pending]: 'PENDING',
-    [PolicyStatus.Cancelled]: 'CANCELLED',
-    [PolicyStatus.DroppedOut]: 'DROPPED OUT'
+    [PolicyStatus.Active]: 'Active',
+    [PolicyStatus.Pending]: 'Pending',
+    [PolicyStatus.Cancelled]: 'Cancelled',
+    [PolicyStatus.DroppedOut]: 'Dropped out'
 }
 
+// TODO: Pull out the dictionaries so this be just a generic badge
 export const PolicyStatusBadge = ({ status }: BadgeProps) => {
     const { textColor, backgroundColor } = BadgeColorMap[status]
-    const className = `inline-block rounded-full	py-1 px-4 font-semibold text-xs ${textColor} ${backgroundColor}`
+    const className = `inline-block rounded-full shadow-sm py-1 px-4 font-semibold text-xs ${textColor} ${backgroundColor}`
 
     return <p className={className}>{BadgeTextMap[status]}</p>
 }

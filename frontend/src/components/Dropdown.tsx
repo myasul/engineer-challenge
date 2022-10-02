@@ -1,9 +1,12 @@
 import { MouseEvent, useState, useRef, useEffect } from "react"
 import { ChevronDown } from './icons/ChevronDown'
-import { Clear } from './icons/Clear'
+import { Remove } from './icons/Remove'
 
 type Props = {
     placeholder: string
+    // TODO: 
+    // - Fix typing to use generics
+    // - use `value` and `displayedText` as options
     options: { key: any, value: any }[]
     selectedOption: { key: any, value: any }
     onSelectedOptionChange: (selectedOption: any) => void
@@ -72,13 +75,16 @@ export const Dropdown = ({
             >
                 <div className='flex-grow text-left'>
                     {selectedOption.value
+                        // TODO: Test if the text color here can be removed
                         ? <span className="text-feather-dark">{selectedOption.value}</span>
                         : <span className="">{placeholder}</span>
                     }
                 </div>
                 {
                     selectedOption.value
-                        ? <Clear className='text-feather-dark' size={24} onClick={handleSelectedOptionRemove} />
+                        // TODO: Change this so that the icon is wrapped rather than
+                        // have classes and event handlers
+                        ? <Remove className='text-feather-dark' size={24} onClick={handleSelectedOptionRemove} />
                         : <ChevronDown size={24} />
                 }
             </button>

@@ -1,6 +1,5 @@
-// TODO: Make the feather icon a component too and move both to an icon directory
 export const MagnifyingGlass = ({ size = 30 }: { size?: number }) => (
-    <div>
+    <div aria-label='magnifying glass icon'>
         <svg
             className='fill-current'
             xmlns="http://www.w3.org/2000/svg"

@@ -1,22 +1,29 @@
-import { ChangeEvent, useEffect, useState } from 'react'
-import { Dropdown } from '../components/Dropdown'
+import {  useEffect, useState } from 'react'
+import { Dropdown } from '../../components/Dropdown'
 
-import { Navbar } from '../components/Navbar'
-import { SearchInput } from '../components/SearchInput'
-import { Table } from '../components/Table'
-import { InsuranceType } from '../types/InsuranceType'
-import { Policy } from '../types/Policy'
-import { PolicyStatus } from '../types/PolicyStatus'
+import { Navbar } from '../../components/Navbar'
+import { SearchInput } from '../../components/SearchInput'
+import { Table } from '../../components/Table'
+import { InsuranceType } from '../../types/InsuranceType'
+import { Policy } from '../../types/Policy'
+import { PolicyFilters } from '../../types/PolicyFilters'
+import { PolicyStatus } from '../../types/PolicyStatus'
 import {
     buildTableRowsFromPolicies,
-    fetchActivePolicies,
+    fetchOngoingPolicies,
     filterPolicies,
-    PolicyFilters,
     policyColumns
 } from './utils'
 
+// NOTES:
+// - Components are independent and decoupled.
+//   You can easily use them anywhere in this codebase.
+
 // TODO:
 // - Make the data that are all caps displayed as title case
+// - Change loading text to be a loading pulse same as what feather uses
+// - Make it responsive
+// - Implement path aliases (just @src is enough)
 export const PoliciesPage = () => {
     const [policies, setPolicies] = useState<Policy[]>([])
     const [filteredPolicies, setFilteredPolicies] = useState<Policy[]>([])
@@ -33,7 +40,8 @@ export const PoliciesPage = () => {
     const handlePolicyFetch = async () => {
         setIsLoading(true)
 
-        const fetchedPolicies = await fetchActivePolicies()
+        // NOTE: This can be moved to an API class
+        const fetchedPolicies = await fetchOngoingPolicies()
 
         setPolicies(fetchedPolicies)
         setFilteredPolicies(fetchedPolicies)
@@ -133,6 +141,7 @@ export const PoliciesPage = () => {
                                 <Table
                                     columns={policyColumns}
                                     rows={buildTableRowsFromPolicies(filteredPolicies)}
+                                    rowsPerPage={8}
                                 />
                             )
                     }

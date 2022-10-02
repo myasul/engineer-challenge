@@ -1,41 +1,44 @@
 import { ChangeEvent } from 'react'
 import { MagnifyingGlass } from './icons/MagnifyingGlass'
 
-
 type Props<InputValue> = {
     value?: InputValue
     placeholder?: string
     onChange: (searchText: string) => void
 }
 
+// TODO
+// - Add remove icon to clear filter
 export const SearchInput = <InputValue extends string> (
     { value, onChange, placeholder }: Props<InputValue>
-) => {const handleNameFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+) => {
+
+    const handleNameFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
         const searchValue = event.target.value as InputValue
 
         onChange(searchValue)
     }
 
     return (
-        // TODO:
-        // 1. Add thin feather violet border when hovered.
-        // 2. Make the border thicker when focused.
         <div
             className='
                 bg-translucent flex py-2 px-3 w-3/12 rounded-md 
-                text-white h-12 shadow-sm hover:bg-feather-hover
-                focus-within:bg-white transition ease-in delay-150
-                focus-within:text-feather-dark cursor-pointer
+                text-white h-12 shadow-sm cursor-pointer
+                focus-within:bg-white focus-within:text-feather-dark
+                transition ease-in delay-150
             '
         >
             <div className="bg-transparent">
                 <MagnifyingGlass />
             </div>
             <input
+                className="
+                    ml-1 w-full border-none bg-transparent placeholder-white
+                    focus:outline-none focus:ring-0 focus:placeholder-gray-400
+                "
                 type="text"
                 value={value}
                 onChange={handleNameFilterChange}
-                className="ml-1 w-full border-none focus:outline-none focus:ring-0 bg-transparent placeholder-white focus:placeholder-gray-400"
                 placeholder={placeholder}
             />
         </div>
