@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from "react"
+import { MouseEvent, FocusEvent, useState, useRef, useEffect } from "react"
 import { ChevronDown } from './icons/ChevronDown'
 
 type Props = {
@@ -9,10 +9,25 @@ type Props = {
 
 export const Dropdown = ({ options, selectedOption, onSelectedOptionChange }: Props) => {
     const [showOptions, setShowOptions] = useState(false)
+    const ref = useRef<HTMLDivElement>(null)
 
     const handleDropdownClick = () => {
         setShowOptions(showOptions => !showOptions)
     }
+
+    useEffect(() => {
+        const handleClickOutside = (event: globalThis.MouseEvent) => {
+            console.log(event)
+            // @ts-ignore
+            if (ref.current && !ref.current.contains(event.target)) {
+                setShowOptions(false)
+            }
+        }
+
+        window.addEventListener('click', handleClickOutside)
+
+        return () => window.removeEventListener('click', handleClickOutside)
+    }, [])
 
     const handleSelectedOptionChange = (event: MouseEvent<HTMLLIElement>) => {
         const optionValue = event.currentTarget.innerText
@@ -28,9 +43,10 @@ export const Dropdown = ({ options, selectedOption, onSelectedOptionChange }: Pr
                 flex flex-col items-center justify-between 
                 py-2 px-3 w-2/12 rounded-md h-12
                 cursor-pointer relative text-white bg-translucent
-                focus-within:bg-white transition ease-in delay-150
+                focus-within:bg-white transition ease-in delay-75
                 focus-within:text-black 
             '
+            ref={ref}
         >
             <button
                 onClick={handleDropdownClick}
