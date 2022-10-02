@@ -58,10 +58,10 @@ export const Dropdown = ({
         <div
             className='
                 flex flex-col items-center justify-between 
-                py-2 px-3 w-2/12 rounded-md h-12
+                py-2 px-3 w-2/12 rounded-md h-12 shadow-sm
                 cursor-pointer relative text-white bg-translucent
                 focus-within:bg-white transition ease-in delay-75
-                focus-within:text-feather-dark 
+                focus-within:text-feather-dark hover:bg-feather-hover
             '
             ref={dropdownContainerRef}
         >
@@ -85,7 +85,7 @@ export const Dropdown = ({
             {showOptions ? (
                 <ul
                     className="
-                        border border-feather-border border-solid
+                        border border-feather-border border-solid shadow-md
                         absolute list-none mt-12 rounded-md z-10 bg-white w-full
                     "
                 >
