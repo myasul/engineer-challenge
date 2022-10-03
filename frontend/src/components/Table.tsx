@@ -33,7 +33,7 @@ export const Table = <RowType extends object> ({ rows, columns, rowsPerPage = ro
     }, [rows, rowsPerPage])
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
             <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                     <div className="overflow-hidden rounded-lg shadow-sm">
@@ -52,7 +52,7 @@ export const Table = <RowType extends object> ({ rows, columns, rowsPerPage = ro
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* TODO: Install `uuid` and use it instead of index */}
+                                {/* NOTE: If table becomes interactive, index can be a generated UUID */}
                                 {(dataBuckets[currentPage] && dataBuckets[currentPage].length > 0)
                                     ? dataBuckets[currentPage].map((row, index) => (
                                         <tr className="border-b" key={index}>

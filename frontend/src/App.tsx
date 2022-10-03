@@ -2,7 +2,7 @@ import "./index.css"
 import { PoliciesPage } from './pages/policies/PoliciesPage'
 
 const App = () => (
-    <div>
+    <div className="h-screen w-full">
         <PoliciesPage />
     </div>
 )
