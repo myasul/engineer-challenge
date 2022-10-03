@@ -73,7 +73,7 @@ export const Dropdown = <Value extends string | number> ({
                     {
                         selectedOption
                             ? <span className="text-feather-dark">{selectedOption.displayedText}</span>
-                            : <span className="">{placeholder}</span>
+                            : placeholder
                     }
                 </div>
                 <div>

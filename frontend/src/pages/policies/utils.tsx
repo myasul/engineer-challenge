@@ -42,19 +42,16 @@ export const buildTableRowsFromPolicies = (policies: Policy[]) => {
 
 export const filterPolicies = (policies: Policy[], filters: PolicyFilters) => {
     const matchedPolicies: Policy[] = []
-    const { name, insuranceType, policyStatus } = filters
+    const { name, insuranceType, policyStatus, provider } = filters
 
     for (const policy of policies) {
         const { customer: { firstName, lastName } } = policy
         const lowercasedFullName = `${firstName} ${lastName}`.toLowerCase()
 
-        if (
-            name !== undefined &&
-            name !== '' &&
-            !lowercasedFullName.includes(name)
-        ) continue
+        if (name !== undefined && name !== '' && !lowercasedFullName.includes(name)) continue
         if (insuranceType !== undefined && policy.insuranceType !== insuranceType) continue
         if (policyStatus !== undefined && policy.status !== policyStatus) continue
+        if (provider !== undefined && policy.provider !== provider) continue
 
         matchedPolicies.push(policy)
     }

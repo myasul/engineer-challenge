@@ -5,6 +5,5 @@ export type PolicyFilters = {
     name?: string,
     insuranceType?: InsuranceType,
     policyStatus?: PolicyStatus,
-    // TODO: Implement
-    // provider: string
+    provider?: string
 }

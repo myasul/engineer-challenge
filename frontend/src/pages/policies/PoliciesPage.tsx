@@ -23,14 +23,16 @@ import {
 // TODO:
 // - Make the data that are all caps displayed as title case
 // - Change loading text to be a loading pulse same as what feather uses
-// - Make it responsive
+// - Make it responsive (Currently the app's styling is ruined in mobile)
 // - Implement path aliases (just @src is enough)
 export const PoliciesPage = () => {
     const [policies, setPolicies] = useState<Policy[]>([])
+    const [providers, setProviders] = useState<string[]>([])
     const [filteredPolicies, setFilteredPolicies] = useState<Policy[]>([])
     const [nameFilter, setNameFilter] = useState<string>()
-    const [policyStatusFilter, setPolicyStatusFilter] = useState<PolicyStatus>()
+    const [providerFilter, setProviderFilter] = useState<string>()
     const [insuranceTypeFilter, setInsuranceTypeFilter] = useState<InsuranceType>()
+    const [policyStatusFilter, setPolicyStatusFilter] = useState<PolicyStatus>()
     // Add a smoother loading experience
     const [isLoading, setIsLoading] = useState(false)
 
@@ -44,7 +46,11 @@ export const PoliciesPage = () => {
         // NOTE: This can be moved to an API class
         const fetchedPolicies = await fetchOngoingPolicies()
 
+        const providers = fetchedPolicies.map(policy => policy.provider)
+        const providerSet = new Set(providers)
+
         setPolicies(fetchedPolicies)
+        setProviders(Array.from(providerSet))
         setFilteredPolicies(fetchedPolicies)
         setIsLoading(false)
     }
@@ -64,12 +70,12 @@ export const PoliciesPage = () => {
         setFilteredPolicies(updatedFilteredPolicies)
     }
 
-    // TODO: Fix parameter typing
     const handlePolicyStatusFilterChange = (selecetedPolicyStatus?: PolicyStatus) => {
         const filters: PolicyFilters = {
             name: nameFilter,
             insuranceType: insuranceTypeFilter,
             policyStatus: selecetedPolicyStatus,
+            provider: providerFilter
         }
 
         const updatedFilteredPolicies = filterPolicies(policies, filters)
@@ -78,12 +84,12 @@ export const PoliciesPage = () => {
         setFilteredPolicies(updatedFilteredPolicies)
     }
 
-    // TODO: Fix parameter typing
     const handleInsuranceTypeFilterChange = (selectedInsuranceType?: InsuranceType) => {
         const filters: PolicyFilters = {
             name: nameFilter,
             insuranceType: selectedInsuranceType,
             policyStatus: policyStatusFilter,
+            provider: providerFilter
         }
 
         const updatedFilteredPolicies = filterPolicies(policies, filters)
@@ -92,8 +98,19 @@ export const PoliciesPage = () => {
         setFilteredPolicies(updatedFilteredPolicies)
     }
 
-    // TODO: Implement
-    // const handleProviderFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {}    
+    const handleProviderFilterChange = (provider?: string) => {
+        const filters: PolicyFilters = {
+            name: nameFilter,
+            insuranceType: insuranceTypeFilter,
+            policyStatus: policyStatusFilter,
+            provider: provider
+        }
+
+        const updatedFilteredPolicies = filterPolicies(policies, filters)
+
+        setProviderFilter(provider)
+        setFilteredPolicies(updatedFilteredPolicies)
+    }    
 
     return (
         <div className='font-serif'>
@@ -111,6 +128,28 @@ export const PoliciesPage = () => {
                                 placeholder="Search policies using client's name"
                             />
                             <Dropdown
+                                placeholder='Provider'
+                                onSelectedOptionChange={handleProviderFilterChange}
+                                onSelectedOptionRemove={() => handleProviderFilterChange(undefined)}
+                                options={providers.map(provider => ({ displayedText: provider, value: provider }))}
+                                selectedOption={
+                                    providerFilter
+                                        ? { displayedText: providerFilter, value: providerFilter }
+                                        : undefined
+                                }
+                            />
+                            <Dropdown
+                                placeholder='Insurance type'
+                                onSelectedOptionChange={handleInsuranceTypeFilterChange}
+                                onSelectedOptionRemove={() => handleInsuranceTypeFilterChange(undefined)}
+                                options={Object.values(InsuranceType).map(type => ({ displayedText: toTitleCase(type), value: type }))}
+                                selectedOption={
+                                    insuranceTypeFilter
+                                        ? { displayedText: toTitleCase(insuranceTypeFilter), value: insuranceTypeFilter }
+                                        : undefined
+                                }
+                            />
+                            <Dropdown
                                 placeholder='Policy status'
                                 onSelectedOptionChange={handlePolicyStatusFilterChange}
                                 onSelectedOptionRemove={() => handlePolicyStatusFilterChange(undefined)}
@@ -121,21 +160,6 @@ export const PoliciesPage = () => {
                                 selectedOption={
                                     policyStatusFilter
                                         ? { displayedText: toTitleCase(policyStatusFilter), value: policyStatusFilter }
-                                        : undefined
-                                }
-                            />
-                            <Dropdown
-                                placeholder='Insurance type'
-                                onSelectedOptionChange={handleInsuranceTypeFilterChange}
-                                onSelectedOptionRemove={() => handleInsuranceTypeFilterChange(undefined)}
-                                options={[
-                                    { displayedText: toTitleCase(InsuranceType.Health), value: InsuranceType.Health },
-                                    { displayedText: toTitleCase(InsuranceType.Household), value: InsuranceType.Household },
-                                    { displayedText: toTitleCase(InsuranceType.Liability), value: InsuranceType.Liability }
-                                ]}
-                                selectedOption={
-                                    insuranceTypeFilter
-                                        ? { displayedText: toTitleCase(insuranceTypeFilter), value: insuranceTypeFilter }
                                         : undefined
                                 }
                             />
@@ -150,7 +174,7 @@ export const PoliciesPage = () => {
                                 <Table
                                     columns={policyColumns}
                                     rows={buildTableRowsFromPolicies(filteredPolicies)}
-                                    rowsPerPage={8}
+                                    rowsPerPage={100}
                                 />
                             )
                     }
