@@ -1,25 +1,24 @@
-import { MouseEvent, useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect } from "react"
 import { ChevronDown } from './icons/ChevronDown'
 import { Remove } from './icons/Remove'
 
-type Props = {
+type DropdownOption<Value> = { displayedText: string | number, value: Value }
+
+type Props<Value> = {
     placeholder: string
-    // TODO: 
-    // - Fix typing to use generics
-    // - use `value` and `displayedText` as options
-    options: { key: any, value: any }[]
-    selectedOption: { key: any, value: any }
+    options: DropdownOption<Value>[]
+    selectedOption?: DropdownOption<Value>
     onSelectedOptionChange: (selectedOption: any) => void
     onSelectedOptionRemove: () => void
 }
 
-export const Dropdown = ({
+export const Dropdown = <Value extends string | number> ({
     placeholder,
     options,
     selectedOption,
     onSelectedOptionChange,
     onSelectedOptionRemove
-}: Props) => {
+}: Props<Value>) => {
     const [showOptions, setShowOptions] = useState(false)
     const dropdownContainerRef = useRef<HTMLDivElement>(null)
     const buttonRef = useRef<HTMLButtonElement>(null)
@@ -40,11 +39,8 @@ export const Dropdown = ({
         return () => window.removeEventListener('click', handleClickOutside)
     }, [dropdownContainerRef])
 
-    const handleSelectedOptionChange = (event: MouseEvent<HTMLLIElement>) => {
-        const optionValue = event.currentTarget.innerText
-        const selectedOption = options.find(option => option.value === optionValue)
-
-        onSelectedOptionChange(selectedOption ? selectedOption.value : '')
+    const handleSelectedOptionChange = (selectedOption: Value) => {
+        onSelectedOptionChange(selectedOption)
         setShowOptions(false)
     }
 
@@ -74,19 +70,23 @@ export const Dropdown = ({
                 ref={buttonRef}
             >
                 <div className='flex-grow text-left'>
-                    {selectedOption.value
-                        // TODO: Test if the text color here can be removed
-                        ? <span className="text-feather-dark">{selectedOption.value}</span>
-                        : <span className="">{placeholder}</span>
+                    {
+                        selectedOption
+                            ? <span className="text-feather-dark">{selectedOption.displayedText}</span>
+                            : <span className="">{placeholder}</span>
                     }
                 </div>
-                {
-                    selectedOption.value
-                        // TODO: Change this so that the icon is wrapped rather than
-                        // have classes and event handlers
-                        ? <Remove className='text-feather-dark' size={24} onClick={handleSelectedOptionRemove} />
-                        : <ChevronDown size={24} />
-                }
+                <div>
+                    {
+                        selectedOption
+                            ? (
+                                <span className='text-feather-dark' onClick={handleSelectedOptionRemove}>
+                                    <Remove size={24} />
+                                </span>
+                            )
+                            : <ChevronDown size={24} />
+                    }
+                </div>
             </button>
             {showOptions ? (
                 <ul
@@ -95,14 +95,14 @@ export const Dropdown = ({
                         absolute list-none mt-12 rounded-md z-10 bg-white w-full
                     "
                 >
-                    {options.map(({ key, value }) => {
+                    {options.map(({ displayedText, value }) => {
                         return (
                             <li
                                 className='p-2 hover:bg-feather-hover hover:text-white'
-                                key={key}
-                                onClick={handleSelectedOptionChange}
+                                key={value}
+                                onClick={() => handleSelectedOptionChange(value)}
                             >
-                                {value}
+                                {displayedText}
                             </li>
                         )
                     })}

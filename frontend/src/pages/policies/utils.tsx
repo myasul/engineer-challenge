@@ -31,7 +31,7 @@ export const buildTableRowsFromPolicies = (policies: Policy[]) => {
     for (const policy of policies) {
         rows.push({
             fullName: `${policy.customer.firstName} ${policy.customer.lastName}`,
-            provider: toTitleCase(policy.provider),
+            provider: policy.provider,
             insuranceType: toTitleCase(policy.insuranceType),
             status: <PolicyStatusBadge status={policy.status} />,
         })

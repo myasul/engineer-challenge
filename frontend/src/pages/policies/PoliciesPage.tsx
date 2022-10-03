@@ -1,4 +1,4 @@
-import {  useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dropdown } from '../../components/Dropdown'
 
 import { Navbar } from '../../components/Navbar'
@@ -12,7 +12,8 @@ import {
     buildTableRowsFromPolicies,
     fetchOngoingPolicies,
     filterPolicies,
-    policyColumns
+    policyColumns,
+    toTitleCase
 } from './utils'
 
 // NOTES:
@@ -64,7 +65,7 @@ export const PoliciesPage = () => {
     }
 
     // TODO: Fix parameter typing
-    const handlePolicyStatusFilterChange = (selecetedPolicyStatus: any) => {
+    const handlePolicyStatusFilterChange = (selecetedPolicyStatus?: PolicyStatus) => {
         const filters: PolicyFilters = {
             name: nameFilter,
             insuranceType: insuranceTypeFilter,
@@ -78,7 +79,7 @@ export const PoliciesPage = () => {
     }
 
     // TODO: Fix parameter typing
-    const handleInsuranceTypeFilterChange = (selectedInsuranceType: any) => {
+    const handleInsuranceTypeFilterChange = (selectedInsuranceType?: InsuranceType) => {
         const filters: PolicyFilters = {
             name: nameFilter,
             insuranceType: selectedInsuranceType,
@@ -111,24 +112,32 @@ export const PoliciesPage = () => {
                             />
                             <Dropdown
                                 placeholder='Policy status'
-                                options={[
-                                    { key: PolicyStatus.Active, value: PolicyStatus.Active },
-                                    { key: PolicyStatus.Pending, value: PolicyStatus.Pending }
-                                ]}
                                 onSelectedOptionChange={handlePolicyStatusFilterChange}
-                                selectedOption={{ key: policyStatusFilter, value: policyStatusFilter }}
                                 onSelectedOptionRemove={() => handlePolicyStatusFilterChange(undefined)}
+                                options={[
+                                    { displayedText: toTitleCase(PolicyStatus.Active), value: PolicyStatus.Active },
+                                    { displayedText: toTitleCase(PolicyStatus.Pending), value: PolicyStatus.Pending }
+                                ]}
+                                selectedOption={
+                                    policyStatusFilter
+                                        ? { displayedText: toTitleCase(policyStatusFilter), value: policyStatusFilter }
+                                        : undefined
+                                }
                             />
                             <Dropdown
                                 placeholder='Insurance type'
-                                options={[
-                                    { key: InsuranceType.Health, value: InsuranceType.Health },
-                                    { key: InsuranceType.Household, value: InsuranceType.Household },
-                                    { key: InsuranceType.Liability, value: InsuranceType.Liability }
-                                ]}
-                                selectedOption={{ key: insuranceTypeFilter, value: insuranceTypeFilter }}
                                 onSelectedOptionChange={handleInsuranceTypeFilterChange}
                                 onSelectedOptionRemove={() => handleInsuranceTypeFilterChange(undefined)}
+                                options={[
+                                    { displayedText: toTitleCase(InsuranceType.Health), value: InsuranceType.Health },
+                                    { displayedText: toTitleCase(InsuranceType.Household), value: InsuranceType.Household },
+                                    { displayedText: toTitleCase(InsuranceType.Liability), value: InsuranceType.Liability }
+                                ]}
+                                selectedOption={
+                                    insuranceTypeFilter
+                                        ? { displayedText: toTitleCase(insuranceTypeFilter), value: insuranceTypeFilter }
+                                        : undefined
+                                }
                             />
                         </div>
                     </div>
