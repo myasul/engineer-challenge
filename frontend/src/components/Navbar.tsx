@@ -1,4 +1,3 @@
-import logo from '../assets/logo.svg'
 import { Feather } from './icons/Feather'
 
 export const Navbar = () => (

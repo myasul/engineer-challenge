@@ -30,7 +30,10 @@ module.exports = {
     }
   },
   variants: {
-    extend: {},
+    extend: {
+        button: ['disabled'],
+        opacity: ['disabled'],
+    },
   },
   plugins: [],
 };

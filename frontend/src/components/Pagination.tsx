@@ -30,26 +30,44 @@ export const Pagination = ({
         onPrevClick(pageNumber)
     }
 
-    // const handlePageNumberClick = () => {
-    //     onPageNumberClick(pageNumber)
-    // }
+    const handlePageNumberClick = (pageNumber: number) => {
+        onPageNumberClick(pageNumber)
+    }
 
 
     return (
         <div className='flex text-feather-primary'>
-            <button
-                disabled={currentPage === 1}
-                onClick={handlePrevClick}
-            >
-                <ChevronLeft size={24} />
-            </button>
-            { }
-            <button
-                disabled={currentPage === totalPages}
-                onClick={handleNextClick}
-            >
-                <ChevronRight size={24} />
-            </button>
+            <ul className="flex gap-3">
+                <button
+                    className="disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={currentPage === 1}
+                    onClick={handlePrevClick}
+                >
+                    <ChevronLeft size={24} />
+                </button>
+                {
+                    Array(totalPages + 1).fill(undefined).flatMap((_value, index) => {
+                        if (index === 0) return []
+
+                        const className = index === currentPage
+                            ? "w-6 rounded-md bg-feather-primary text-white"
+                            : "w-6 text-current"
+
+                        return (
+                            <button onClick={() => handlePageNumberClick(index)}>
+                                <li className={className}>{index}</li>
+                            </button>
+                        )
+                    })
+                }
+                <button
+                    className="disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={currentPage === totalPages}
+                    onClick={handleNextClick}
+                >
+                    <ChevronRight size={24} />
+                </button>
+            </ul>
         </div>
     )
 }
