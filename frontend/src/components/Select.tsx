@@ -2,17 +2,17 @@ import { useState, useRef, useEffect } from "react"
 import { ChevronDown } from './icons/ChevronDown'
 import { Remove } from './icons/Remove'
 
-type DropdownOption<Value> = { displayedText: string | number, value: Value }
+type SelectOption<Value> = { displayedText: string | number, value: Value }
 
 type Props<Value> = {
     placeholder: string
-    options: DropdownOption<Value>[]
-    selectedOption?: DropdownOption<Value>
+    options: SelectOption<Value>[]
+    selectedOption?: SelectOption<Value>
     onSelectedOptionChange: (selectedOption: any) => void
     onSelectedOptionRemove: () => void
 }
 
-export const Dropdown = <Value extends string | number> ({
+export const Select = <Value extends string | number> ({
     placeholder,
     options,
     selectedOption,
@@ -49,7 +49,7 @@ export const Dropdown = <Value extends string | number> ({
         onSelectedOptionRemove()
     }
 
-    const handleDropdownClick = () => {
+    const handleSelectClick = () => {
         setShowOptions(showOptions => !showOptions)
     }
 
@@ -65,7 +65,7 @@ export const Dropdown = <Value extends string | number> ({
             ref={dropdownContainerRef}
         >
             <button
-                onClick={handleDropdownClick}
+                onClick={handleSelectClick}
                 className="flex items-center justify-between w-full h-full"
                 ref={buttonRef}
             >

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Dropdown } from '../../components/Dropdown'
+import { Select } from '../../components/Select'
 import { LoadingPulse } from '../../components/LoadingPulse'
 
 import { Navbar } from '../../components/Navbar'
@@ -25,7 +25,7 @@ import {
 // * Make the data that are all caps displayed as title case
 // * Change loading text to be a loading pulse same as what feather uses
 // * Add a smoother loading experience
-// - Implement pagination
+// * Implement pagination
 // - Make it responsive (Currently the app's styling is ruined in mobile)
 // - Manual testing
 // - Remove fetch delay hack
@@ -61,8 +61,8 @@ export const PoliciesPage = () => {
         setIsLoading(false)
     }
 
-    const handleNameFilterChange = (updatedNameFilter: string) => {
-        const lowercasedNameFilter = updatedNameFilter.toLowerCase()
+    const handleNameFilterChange = (updatedNameFilter?: string) => {
+        const lowercasedNameFilter = updatedNameFilter?.toLowerCase() 
 
         const filters: PolicyFilters = {
             name: lowercasedNameFilter,
@@ -131,9 +131,10 @@ export const PoliciesPage = () => {
                         <SearchInput
                             value={nameFilter}
                             onChange={handleNameFilterChange}
+                            onClear={() => handleNameFilterChange(undefined)}
                             placeholder="Client name"
                         />
-                        <Dropdown
+                        <Select
                             placeholder='Provider'
                             onSelectedOptionChange={handleProviderFilterChange}
                             onSelectedOptionRemove={() => handleProviderFilterChange(undefined)}
@@ -144,7 +145,7 @@ export const PoliciesPage = () => {
                                     : undefined
                             }
                         />
-                        <Dropdown
+                        <Select
                             placeholder='Insurance type'
                             onSelectedOptionChange={handleInsuranceTypeFilterChange}
                             onSelectedOptionRemove={() => handleInsuranceTypeFilterChange(undefined)}
@@ -155,7 +156,7 @@ export const PoliciesPage = () => {
                                     : undefined
                             }
                         />
-                        <Dropdown
+                        <Select
                             placeholder='Policy status'
                             onSelectedOptionChange={handlePolicyStatusFilterChange}
                             onSelectedOptionRemove={() => handlePolicyStatusFilterChange(undefined)}

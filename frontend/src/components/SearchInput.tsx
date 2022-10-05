@@ -1,16 +1,16 @@
 import { ChangeEvent } from 'react'
 import { MagnifyingGlass } from './icons/MagnifyingGlass'
+import { Remove } from './icons/Remove'
 
 type Props<InputValue> = {
     value?: InputValue
     placeholder?: string
     onChange: (searchText: string) => void
+    onClear: () => void
 }
 
-// TODO
-// - Add remove icon to clear filter
 export const SearchInput = <InputValue extends string> (
-    { value, onChange, placeholder }: Props<InputValue>
+    { value, placeholder, onChange, onClear }: Props<InputValue>
 ) => {
 
     const handleNameFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +22,7 @@ export const SearchInput = <InputValue extends string> (
     return (
         <div
             className='
-                bg-translucent flex py-2 px-3 w-3/12 rounded-md 
+                bg-translucent flex items-center py-2 px-3 w-3/12 rounded-md 
                 text-white h-12 shadow-sm cursor-pointer
                 focus-within:bg-white focus-within:text-feather-dark
                 transition ease-in delay-150
@@ -37,10 +37,19 @@ export const SearchInput = <InputValue extends string> (
                     focus:outline-none focus:ring-0 focus:placeholder-gray-400
                 "
                 type="text"
-                value={value}
+                value={value ?? ''}
                 onChange={handleNameFilterChange}
                 placeholder={placeholder}
             />
+            {
+                (value && value.length > 0)
+                    ? (
+                        <div onClick={onClear}>
+                            <Remove size={24} />
+                        </div>
+                    )
+                    : null
+            }
         </div>
     )
 }

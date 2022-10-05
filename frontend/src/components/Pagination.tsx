@@ -4,7 +4,8 @@ import { ChevronRight } from './icons/ChevronRight'
 type Props = {
     currentPage: number
     totalPages: number
-    // TODO: Implement
+    // NOTES: Can be implemented once we get
+    // a really high number of pages
     // maxPageNumbersDisplayed: number
     onPrevClick: (currentPage: number) => void
     onNextClick: (currentPage: number) => void
