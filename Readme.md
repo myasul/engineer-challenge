@@ -132,4 +132,4 @@ Feel free to update or add more endpoints to accommodate or improve your solutio
 
 ## Demo
 
-![Alt Text](./feather-policy-page-demo.gif)
+![Alt Text](./policy-page-demo.gif)
