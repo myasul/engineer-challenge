@@ -17,21 +17,6 @@ import {
     toTitleCase
 } from './utils'
 
-// NOTES:
-// - Components are independent and decoupled.
-//   You can easily use them anywhere in this codebase.
-
-// TODO:
-// * Make the data that are all caps displayed as title case
-// * Change loading text to be a loading pulse same as what feather uses
-// * Add a smoother loading experience
-// * Implement pagination
-// * Make it responsive (Currently the app's styling is ruined in mobile)
-// * Add error handling
-// * Manual testing
-// * Remove fetch delay hack
-// - Implement path aliases (just @src is enough)
-
 export const PoliciesPage = () => {
     const [policies, setPolicies] = useState<Policy[]>([])
     const [providers, setProviders] = useState<string[]>([])
@@ -51,7 +36,7 @@ export const PoliciesPage = () => {
         setIsLoading(true)
 
         // NOTE: Hack to delay fetch and test loading screen
-        // await new Promise((resolve) => setTimeout(resolve, 3000))
+        // await new Promise((resolve) => setTimeout(resolve, 1500))
 
         try {
             // NOTE: This can be moved to an API class

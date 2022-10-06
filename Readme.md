@@ -112,12 +112,24 @@ Feel free to update or add more endpoints to accommodate or improve your solutio
 
 ## General questions
 
-- How much time did you spend working on the solution?
+- How much time did you spend working on the solution?  
+  - About 4 days
 - What’s the part of the solution you are most proud of?
 
-  _You can share a code snippet here if you feel like it_
+  - I'm glad I was able to make all the components in the `components` directory decoupled from one another. This makes these components reusable and testable.
+  - Making the filters work smoothly was challenging. I solved it by having a `filters` object and encapsulating the filtering policy in a function (`filterPolicies`). This way I could easily pass the function into all of the handlers of the filter components.
 
-- If you had more time, what other things you would like to do?
+- If you had more time, what other things you would like to do?  
+  I would do the following:
+    - Write unit tests for the utility functions and reusable components.
+    - Implement path aliases.
+    - Improve the `Pagination` component to deal with large number of rows.
+    - Create a separate API class for the Policy API
 - Do you have any feedback regarding this coding challenge?  
+    - It's both fun and challeging especially if you're not familliar with creating components from scratch (e.g. `Table`, filter components, & `Pagination`).
 
   _Is the initial setup working?, is something missing?, or any other comment_
+
+## Demo
+
+![Alt Text](./feather-policy-page-demo.gif)
