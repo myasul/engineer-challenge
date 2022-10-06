@@ -56,8 +56,8 @@ export const Select = <Value extends string | number> ({
     return (
         <div
             className='
-                flex flex-col items-center justify-between 
-                py-2 px-3 w-2/12 rounded-md h-12 shadow-sm
+                flex flex-col items-center justify-between
+                rounded-md h-12 shadow-sm w-full py-2 px-3 
                 cursor-pointer relative text-white bg-translucent
                 focus-within:bg-white transition ease-in delay-75
                 focus-within:text-feather-dark hover:bg-feather-hover

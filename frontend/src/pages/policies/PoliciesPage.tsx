@@ -26,9 +26,10 @@ import {
 // * Change loading text to be a loading pulse same as what feather uses
 // * Add a smoother loading experience
 // * Implement pagination
-// - Make it responsive (Currently the app's styling is ruined in mobile)
-// - Manual testing
-// - Remove fetch delay hack
+// * Make it responsive (Currently the app's styling is ruined in mobile)
+// * Add error handling
+// * Manual testing
+// * Remove fetch delay hack
 // - Implement path aliases (just @src is enough)
 
 export const PoliciesPage = () => {
@@ -40,6 +41,7 @@ export const PoliciesPage = () => {
     const [insuranceTypeFilter, setInsuranceTypeFilter] = useState<InsuranceType>()
     const [policyStatusFilter, setPolicyStatusFilter] = useState<PolicyStatus>()
     const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState<string>()
 
     useEffect(() => {
         handlePolicyFetch()
@@ -48,21 +50,30 @@ export const PoliciesPage = () => {
     const handlePolicyFetch = async () => {
         setIsLoading(true)
 
-        // NOTE: This can be moved to an API class
-        await new Promise((resolve) => setTimeout(resolve, 3000))
-        const fetchedPolicies = await fetchOngoingPolicies()
+        // NOTE: Hack to delay fetch and test loading screen
+        // await new Promise((resolve) => setTimeout(resolve, 3000))
 
-        const providers = fetchedPolicies.map(policy => policy.provider)
-        const providerSet = new Set(providers)
+        try {
+            // NOTE: This can be moved to an API class
+            const fetchedPolicies = await fetchOngoingPolicies()
 
-        setPolicies(fetchedPolicies)
-        setProviders(Array.from(providerSet))
-        setFilteredPolicies(fetchedPolicies)
-        setIsLoading(false)
+            const providers = fetchedPolicies.map(policy => policy.provider)
+            const providerSet = new Set(providers)
+
+            setPolicies(fetchedPolicies)
+            setProviders(Array.from(providerSet))
+            setFilteredPolicies(fetchedPolicies)
+            setIsLoading(false)
+        } catch (err) {
+            const error = err as Error
+
+            console.error(error)
+            setError(error.message)
+        }
     }
 
     const handleNameFilterChange = (updatedNameFilter?: string) => {
-        const lowercasedNameFilter = updatedNameFilter?.toLowerCase() 
+        const lowercasedNameFilter = updatedNameFilter?.toLowerCase()
 
         const filters: PolicyFilters = {
             name: lowercasedNameFilter,
@@ -119,21 +130,59 @@ export const PoliciesPage = () => {
         setFilteredPolicies(updatedFilteredPolicies)
     }
 
+    const body = error
+        ? (
+            <div className="h-full flex items-center justify-center animate-fade-in">
+                <h1 className="text-2xl text-feather-primary text-center">
+                    Something unexpected happened. Please try again later.
+                </h1>
+            </div>
+        )
+        : (
+            <div className=' px-16 py-8 flex-grow flex md:px-4'>
+                {
+                    isLoading
+                        ? (
+                            <div className="flex items-center justify-center w-full">
+                                <LoadingPulse />
+                            </div>
+                        )
+                        : (
+                            <div className="w-full animate-fade-in">
+                                <Table
+                                    columns={policyColumns}
+                                    rows={buildTableRowsFromPolicies(filteredPolicies)}
+                                    rowsPerPage={5}
+                                />
+                            </div>
+                        )
+                }
+            </div>
+        )
+
+
     return (
         <div className="font-serif w-full h-full flex flex-col">
             <div className="w-full shadow-md">
                 <Navbar />
-                <div className='bg-feather-primary px-16 py-6'>
+                <div className='bg-feather-primary px-16 py-6 lg:py-4 md:px-4'>
                     <h1 className="text-3xl text-white mb-8">
                         Policies
                     </h1>
-                    <div className='flex gap-4'>
-                        <SearchInput
-                            value={nameFilter}
-                            onChange={handleNameFilterChange}
-                            onClear={() => handleNameFilterChange(undefined)}
-                            placeholder="Client name"
-                        />
+                    <div
+                        className='
+                            grid grid-cols-5 gap-4 grid-rows-1
+                            lg:grid lg:grid-cols-2 lg:grid-rows-2
+                        '
+                    >
+                        <div className="col-span-2 lg:col-span-1">
+                            <SearchInput
+                                value={nameFilter}
+                                onChange={handleNameFilterChange}
+                                onClear={() => handleNameFilterChange(undefined)}
+                                placeholder="Client name"
+                            />
+                        </div>
                         <Select
                             placeholder='Provider'
                             onSelectedOptionChange={handleProviderFilterChange}
@@ -173,25 +222,7 @@ export const PoliciesPage = () => {
                     </div>
                 </div>
             </div>
-            <div className='px-16 py-8 flex-grow flex'>
-                {
-                    isLoading
-                        ? (
-                            <div className="flex items-center justify-center w-full">
-                                <LoadingPulse />
-                            </div>
-                        )
-                        : (
-                            <div className="w-full animate-fade-in">
-                                <Table
-                                    columns={policyColumns}
-                                    rows={buildTableRowsFromPolicies(filteredPolicies)}
-                                    rowsPerPage={7}
-                                />
-                            </div>
-                        )
-                }
-            </div>
+            {body}
         </div>
     )
 }

@@ -22,7 +22,7 @@ export const SearchInput = <InputValue extends string> (
     return (
         <div
             className='
-                bg-translucent flex items-center py-2 px-3 w-3/12 rounded-md 
+                bg-translucent flex items-center py-2 px-3 w-full rounded-md 
                 text-white h-12 shadow-sm cursor-pointer
                 focus-within:bg-white focus-within:text-feather-dark
                 transition ease-in delay-150

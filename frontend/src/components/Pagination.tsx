@@ -51,7 +51,7 @@ export const Pagination = ({
                         if (index === 0) return []
 
                         const className = index === currentPage
-                            ? "w-6 rounded-md bg-feather-primary text-white"
+                            ? "w-6 rounded-md bg-feather-primary text-white transition delay-75 ease-in"
                             : "w-6 text-current"
 
                         return (
